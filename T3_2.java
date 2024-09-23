@@ -38,21 +38,31 @@ class VarDefinition{
 
         if (string.length() > 4) {
 
+            int a = 0;
             for (int i = 0; i < string.length(); i++) {
-                if (string.charAt(i) != ' ') {
-                    newString += string.charAt(i);
+
+                    if (string.charAt(i) == '"') {
+                        if (a < 4) {
+                            quotes[a] = i;
+                            a += 1;
+                        }
                 }
             }
 
-            int a = 0;
-            for (int i = 0; i < newString.length(); i++) {
-
-                if (newString.charAt(i) == '"') {
-
-                    if (a < 4) {
-                        quotes[a] = i;
-                        a += 1;
+            for (int i = 0; i < string.length(); i++) {
+                if (i > quotes[1]) {
+                    if (string.charAt(i) != ' ') {
+                        newString += string.charAt(i);
+                    } else {
+                        if (quotes[2] > -1) {
+                            quotes[2] -= 1;
+                        }
+                        if (quotes[3] > -1) {
+                            quotes[3] -= 1;
+                        }
                     }
+                }else {
+                    newString += string.charAt(i);
                 }
             }
         }
@@ -62,7 +72,6 @@ class VarDefinition{
         char Symbol = 0;
 
         if (quotes[1] > 1) {
-
             try {
                 Symbol = newString.charAt(quotes[1]+1);
             } catch (StringIndexOutOfBoundsException e) {
@@ -89,7 +98,7 @@ class VarDefinition{
 
         String string2;
 
-        if (quotes[3] > -1) {////////// есть 3-е и 4-е кавычки после арифм знака
+        if (quotes[3] > -1) {
 
             string2 = newString.substring(quotes[2] + 1, quotes[3]);
 
@@ -102,27 +111,21 @@ class VarDefinition{
 
     public int secondVarNumber() throws IOException{
 
-      //  int indexOfMath = -1;
         String string3;
         String numberString = "";
 
-        if (quotes[1] > 1 && quotes[2] == -1) {     //если после ариф знака нет кавычек
+        if (quotes[1] > 1 && quotes[2] == -1) {
 
             string3 = newString.substring(quotes[1] + 2);
 
             for (int i = 0; i < string3.length(); i++) {
 
-           //     if (indexOfMath >= 0) {
                     if (Character.isDigit(string3.charAt(i))) {
                         numberString += string3.charAt(i);
                     }
                     else {
                         throw new IOException();
                     }
-             //   }
-                /*if ((string3.charAt(i) == '+' || string3.charAt(i) == '-' || string3.charAt(i) == '/' || string3.charAt(i) == '*') && indexOfMath < 0) {
-                    indexOfMath = i;
-                }*/
             }
         }  else {
             throw new IOException();
